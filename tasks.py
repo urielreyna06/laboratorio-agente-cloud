@@ -7,7 +7,9 @@ def agregar_tarea(tareas, titulo, categoria="general"):
         raise ValueError("La categoría es obligatoria")
     tarea = {
         # max + 1 en lugar de len + 1: tras eliminar tareas, len + 1 podría
-        # repetir un ID que todavía existe en la lista.
+        # repetir un ID que todavía existe en la lista. El ID es único solo
+        # entre las tareas actuales: si se eliminó la tarea con el ID más
+        # alto, la siguiente tarea agregada reutiliza ese ID.
         "id": max((t["id"] for t in tareas), default=0) + 1,
         "titulo": titulo,
         "categoria": categoria,

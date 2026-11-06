@@ -120,6 +120,16 @@ class TestTasks(unittest.TestCase):
         ids = [t["id"] for t in tareas]
         self.assertEqual(len(ids), len(set(ids)))
 
+    def test_agregar_tras_eliminar_la_ultima_reutiliza_su_id(self):
+        tareas = []
+        agregar_tarea(tareas, "Uno", "A")
+        agregar_tarea(tareas, "Dos", "B")
+        eliminar_tarea(tareas, 2)
+        nueva = agregar_tarea(tareas, "Tres", "C")
+        self.assertEqual(nueva["id"], 2)
+        self.assertEqual([t["id"] for t in tareas], [1, 2])
+        self.assertEqual([t["titulo"] for t in tareas], ["Uno", "Tres"])
+
 
 if __name__ == "__main__":
     unittest.main()
