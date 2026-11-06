@@ -6,7 +6,11 @@ def agregar_tarea(tareas, titulo, categoria="general"):
     if not categoria:
         raise ValueError("La categoría es obligatoria")
     tarea = {
-        "id": len(tareas) + 1,
+        # max + 1 en lugar de len + 1: tras eliminar tareas, len + 1 podría
+        # repetir un ID que todavía existe en la lista. El ID es único solo
+        # entre las tareas actuales: si se eliminó la tarea con el ID más
+        # alto, la siguiente tarea agregada reutiliza ese ID.
+        "id": max((t["id"] for t in tareas), default=0) + 1,
         "titulo": titulo,
         "categoria": categoria,
         "completada": False,
@@ -20,6 +24,13 @@ def completar_tarea(tareas, tarea_id):
         if tarea["id"] == tarea_id:
             tarea["completada"] = True
             return tarea
+    raise ValueError("Tarea no encontrada")
+
+
+def eliminar_tarea(tareas, tarea_id):
+    for indice, tarea in enumerate(tareas):
+        if tarea["id"] == tarea_id:
+            return tareas.pop(indice)
     raise ValueError("Tarea no encontrada")
 
 
