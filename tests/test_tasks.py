@@ -46,7 +46,19 @@ class TestTasks(unittest.TestCase):
         self.assertEqual(
             [t["titulo"] for t in pendientes(tareas, "CASA")], ["Comprar pan"]
         )
+
+    def test_pendientes_categoria_inexistente_devuelve_lista_vacia(self):
+        tareas = []
+        agregar_tarea(tareas, "Estudiar", "Estudio")
+        agregar_tarea(tareas, "Comprar pan", "Casa")
         self.assertEqual(pendientes(tareas, "Trabajo"), [])
+
+    def test_pendientes_categoria_vacia_lanza_error(self):
+        tareas = []
+        agregar_tarea(tareas, "Estudiar", "Estudio")
+        for categoria in ("", "   "):
+            with self.assertRaisesRegex(ValueError, "La categoría es obligatoria"):
+                pendientes(tareas, categoria)
 
     def test_pendientes_sin_categoria_devuelve_todas(self):
         tareas = []
